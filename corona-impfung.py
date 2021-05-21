@@ -39,14 +39,26 @@ def main():
 def check_termin():
     page = urllib.request.urlopen(url_db)
     data = page.read()
+    impfstopf_typ = 'Impfstoff: '
+    #ret = data.find('ASTRA ZENECA')
+
+    if  b'ASTRA ZENECA' in data or \
+        b'AstraZeneca ' in data:
+        impfstopf_typ = impfstopf_typ + "ASTRA ZENECA, "
+
+    if b'BIO' in data or\
+       b'BioNTech' in data or\
+       b'bio' in data or\
+       b'Bio' in data:
+        impfstopf_typ = impfstopf_typ +  "BioNTech, "
 
     places = find_values('places', data)
 
-    print( time.strftime("%d.%m.%Y %H:%M:%S") , places)
+    print( time.strftime("%d.%m.%Y %H:%M:%S") , places, " " , impfstopf_typ)
 
     for index, item in enumerate(places):
         if item > 0:
-            print ("Freie Termine:", item, "Termin Nr:", index) 
+            print ("Freie Termine:", item, "Termin Nr:", index," " , impfstopf_typ) 
             return index, item
 
     return False
